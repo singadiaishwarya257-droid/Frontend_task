@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Saved Contact Form</title>
+	<style>
+		:root {
+			color-scheme: light;
+			font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+			background: #eef4f1;
+			color: #19332d;
+		}
+
+		body {
+			display: grid;
+			min-height: 100vh;
+			margin: 0;
+			padding: 1rem;
+			place-items: center;
+			box-sizing: border-box;
+		}
+
+		form {
+			width: min(100%, 32rem);
+			padding: 2rem;
+			border: 1px solid #c9dcd5;
+			border-radius: 0.75rem;
+			background: #ffffff;
+			box-shadow: 0 0.8rem 2rem rgb(25 51 45 / 8%);
+		}
+
+		h1 {
+			margin: 0 0 0.4rem;
+			font-size: 1.8rem;
+		}
+
+		.intro {
+			margin: 0 0 1.5rem;
+			color: #547069;
+		}
+
+		.field {
+			display: grid;
+			gap: 0.45rem;
+			margin-bottom: 1rem;
+		}
+
+		label {
+			font-size: 0.9rem;
+			font-weight: 700;
+		}
+
+		input,
+		textarea,
+		button {
+			box-sizing: border-box;
+			width: 100%;
+			padding: 0.7rem 0.8rem;
+			border: 1px solid #abc4bc;
+			border-radius: 0.4rem;
+			font: inherit;
+		}
+
+		textarea {
+			min-height: 7rem;
+			resize: vertical;
+		}
+
+		input:focus-visible,
+		textarea:focus-visible,
+		button:focus-visible {
+			outline: 3px solid #a8d5c5;
+			outline-offset: 2px;
+		}
+
+		.actions {
+			display: flex;
+			gap: 0.75rem;
+			margin-top: 1.5rem;
+		}
+
+		button {
+			border-color: #176b57;
+			background: #176b57;
+			color: #ffffff;
+			font-weight: 700;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background: #115443;
+		}
+
+		button[type="reset"] {
+			border-color: #abc4bc;
+			background: #ffffff;
+			color: #19332d;
+		}
+
+		button[type="reset"]:hover {
+			background: #f1f7f4;
+		}
+
+		#save-status {
+			min-height: 1.25rem;
+			margin: 1rem 0 0;
+			color: #176b57;
+			font-size: 0.9rem;
+		}
+
+		@media (max-width: 30rem) {
+			.actions {
+				flex-direction: column;
+			}
+		}
+	</style>
+</head>
+<body>
+	<form id="contact-form">
+		<h1>Contact details</h1>
+		<p class="intro">Your progress is saved automatically in this browser.</p>
+
+		<div class="field">
+			<label for="full-name">Full name</label>
+			<input id="full-name" name="fullName" type="text" autocomplete="name" required>
+		</div>
+
+		<div class="field">
+			<label for="email">Email address</label>
+			<input id="email" name="email" type="email" autocomplete="email" required>
+		</div>
+
+		<div class="field">
+			<label for="message">Message</label>
+			<textarea id="message" name="message" placeholder="Write your message..."></textarea>
+		</div>
+
+		<div class="actions">
+			<button type="submit">Submit</button>
+			<button type="reset">Clear saved data</button>
+		</div>
+		<p id="save-status" role="status" aria-live="polite"></p>
+	</form>
+
+	<script>
+		function createFormPersistence(form, storageKey, statusElement) {
+			const saveForm = () => {
+				const values = Object.fromEntries(new FormData(form).entries());
+				localStorage.setItem(storageKey, JSON.stringify(values));
+				statusElement.textContent = "Draft saved in this browser.";
+			};
+
+			const restoreForm = () => {
+				const savedValues = localStorage.getItem(storageKey);
+
+				if (!savedValues) {
+					return;
+				}
+
+				try {
+					const values = JSON.parse(savedValues);
+
+					Object.entries(values).forEach(([name, value]) => {
+						const field = form.elements.namedItem(name);
+
+						if (field) {
+							field.value = value;
+						}
+					});
+
+					statusElement.textContent = "Saved draft restored.";
+				} catch {
+					localStorage.removeItem(storageKey);
+				}
+			};
+
+			form.addEventListener("input", saveForm);
+			form.addEventListener("submit", (event) => {
+				event.preventDefault();
+				saveForm();
+				statusElement.textContent = "Form submitted with your saved details.";
+			});
+			form.addEventListener("reset", () => {
+				localStorage.removeItem(storageKey);
+				statusElement.textContent = "Saved data cleared.";
+			});
+
+			restoreForm();
+		}
+
+		createFormPersistence(
+			document.querySelector("#contact-form"),
+			"contact-form-draft",
+			document.querySelector("#save-status")
+		);
+	</script>
+</body>
+</html>
