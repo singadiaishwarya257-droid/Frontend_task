@@ -3,120 +3,209 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Password Toggle Form</title>
+	<title>Dynamic Data Table</title>
 	<style>
 		:root {
 			color-scheme: light;
 			font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-			background: #f4f7fb;
-			color: #172033;
+			background: #eef4f1;
+			color: #19332d;
 		}
 
 		body {
-			display: grid;
 			min-height: 100vh;
 			margin: 0;
-			place-items: center;
-			padding: 1rem;
+			padding: 3rem 1rem;
 			box-sizing: border-box;
 		}
 
-		form {
-			width: min(100%, 22rem);
-			padding: 2rem;
-			border: 1px solid #d9e0ec;
-			border-radius: 0.75rem;
-			background: #ffffff;
-			box-shadow: 0 0.75rem 2rem rgb(23 32 51 / 10%);
+		main {
+			width: min(100%, 62rem);
+			margin: 0 auto;
+		}
+
+		header {
+			margin-bottom: 1.75rem;
 		}
 
 		h1 {
-			margin: 0 0 1.5rem;
-			font-size: 1.5rem;
+			margin: 0 0 0.4rem;
+			font-size: clamp(1.8rem, 4vw, 2.7rem);
+		}
+
+		.subtitle {
+			margin: 0;
+			color: #547069;
+		}
+
+		.entry-form,
+		.table-wrap {
+			border: 1px solid #c9dcd5;
+			border-radius: 0.75rem;
+			background: #ffffff;
+			box-shadow: 0 0.8rem 2rem rgb(25 51 45 / 8%);
+		}
+
+		.entry-form {
+			display: grid;
+			grid-template-columns: 1.1fr 1.3fr 1fr auto;
+			gap: 1rem;
+			align-items: end;
+			padding: 1.25rem;
+			margin-bottom: 1.5rem;
+		}
+
+		.field {
+			display: grid;
+			gap: 0.45rem;
 		}
 
 		label {
-			display: block;
-			margin-bottom: 0.5rem;
-			font-weight: 600;
+			font-size: 0.85rem;
+			font-weight: 700;
 		}
 
-		input[type="password"],
-		input[type="text"] {
-			width: 100%;
+		input,
+		select,
+		button {
 			box-sizing: border-box;
-			padding: 0.7rem 0.8rem;
-			border: 1px solid #aeb9cc;
+			min-height: 2.7rem;
+			padding: 0.65rem 0.75rem;
+			border: 1px solid #abc4bc;
 			border-radius: 0.4rem;
 			font: inherit;
 		}
 
-		input:focus-visible {
-			outline: 3px solid #9cc4ff;
-			outline-offset: 1px;
-		}
-
-		.toggle {
-			display: flex;
-			align-items: center;
-			gap: 0.5rem;
-			margin: 0.8rem 0 1.25rem;
-			font-weight: 400;
+		input:focus-visible,
+		select:focus-visible,
+		button:focus-visible {
+			outline: 3px solid #a8d5c5;
+			outline-offset: 2px;
 		}
 
 		button {
-			width: 100%;
-			padding: 0.7rem 1rem;
-			border: 0;
-			border-radius: 0.4rem;
-			background: #1769aa;
+			border-color: #176b57;
+			background: #176b57;
 			color: #ffffff;
-			font: inherit;
 			font-weight: 700;
 			cursor: pointer;
 		}
 
 		button:hover {
-			background: #12558b;
+			background: #115443;
 		}
 
-		#message {
-			min-height: 1.25rem;
-			margin: 1rem 0 0;
-			color: #1769aa;
-			font-size: 0.9rem;
+		.table-wrap {
+			overflow-x: auto;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			min-width: 36rem;
+		}
+
+		th,
+		td {
+			padding: 1rem 1.25rem;
+			border-bottom: 1px solid #e0ebe7;
+			text-align: left;
+		}
+
+		th {
+			background: #f5faf8;
+			color: #547069;
+			font-size: 0.78rem;
+			letter-spacing: 0.04em;
+			text-transform: uppercase;
+		}
+
+		tbody tr:last-child td {
+			border-bottom: 0;
+		}
+
+		#empty-message {
+			padding: 2rem;
+			color: #547069;
+			text-align: center;
+		}
+
+		@media (max-width: 700px) {
+			body {
+				padding-top: 2rem;
+			}
+
+			.entry-form {
+				grid-template-columns: 1fr;
+			}
 		}
 	</style>
 </head>
 <body>
-	<form id="password-form">
-		<h1>Enter your password</h1>
+	<main>
+		<header>
+			<h1>Team directory</h1>
+			<p class="subtitle">Add people to the table as you collect their details.</p>
+		</header>
 
-		<label for="password">Password</label>
-		<input id="password" name="password" type="password" autocomplete="current-password" required>
+		<form class="entry-form" id="entry-form">
+			<div class="field">
+				<label for="name">Name</label>
+				<input id="name" name="name" type="text" placeholder="Jordan Lee" required>
+			</div>
+			<div class="field">
+				<label for="email">Email</label>
+				<input id="email" name="email" type="email" placeholder="jordan@example.com" required>
+			</div>
+			<div class="field">
+				<label for="role">Role</label>
+				<select id="role" name="role" required>
+					<option value="">Choose a role</option>
+					<option>Designer</option>
+					<option>Developer</option>
+					<option>Manager</option>
+					<option>Researcher</option>
+				</select>
+			</div>
+			<button type="submit">Add row</button>
+		</form>
 
-		<label class="toggle" for="show-password">
-			<input id="show-password" type="checkbox">
-			Show password
-		</label>
-
-		<button type="submit">Submit</button>
-		<p id="message" role="status" aria-live="polite"></p>
-	</form>
+		<section class="table-wrap" aria-label="Team members">
+			<table>
+				<thead>
+					<tr>
+						<th scope="col">Name</th>
+						<th scope="col">Email</th>
+						<th scope="col">Role</th>
+					</tr>
+				</thead>
+				<tbody id="table-body"></tbody>
+			</table>
+			<p id="empty-message">No team members added yet.</p>
+		</section>
+	</main>
 
 	<script>
-		const passwordInput = document.querySelector("#password");
-		const showPassword = document.querySelector("#show-password");
-		const passwordForm = document.querySelector("#password-form");
-		const message = document.querySelector("#message");
+		const entryForm = document.querySelector("#entry-form");
+		const tableBody = document.querySelector("#table-body");
+		const emptyMessage = document.querySelector("#empty-message");
 
-		showPassword.addEventListener("change", () => {
-			passwordInput.type = showPassword.checked ? "text" : "password";
-		});
-
-		passwordForm.addEventListener("submit", (event) => {
+		entryForm.addEventListener("submit", (event) => {
 			event.preventDefault();
-			message.textContent = "Password ready to submit.";
+
+			const formData = new FormData(entryForm);
+			const row = document.createElement("tr");
+
+			["name", "email", "role"].forEach((fieldName) => {
+				const cell = document.createElement("td");
+				cell.textContent = formData.get(fieldName);
+				row.append(cell);
+			});
+
+			tableBody.append(row);
+			emptyMessage.hidden = true;
+			entryForm.reset();
+			entryForm.elements.name.focus();
 		});
 	</script>
 </body>
