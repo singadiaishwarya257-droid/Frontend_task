@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Password Toggle Form</title>
+	<style>
+		:root {
+			color-scheme: light;
+			font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+			background: #f4f7fb;
+			color: #172033;
+		}
+
+		body {
+			display: grid;
+			min-height: 100vh;
+			margin: 0;
+			place-items: center;
+			padding: 1rem;
+			box-sizing: border-box;
+		}
+
+		form {
+			width: min(100%, 22rem);
+			padding: 2rem;
+			border: 1px solid #d9e0ec;
+			border-radius: 0.75rem;
+			background: #ffffff;
+			box-shadow: 0 0.75rem 2rem rgb(23 32 51 / 10%);
+		}
+
+		h1 {
+			margin: 0 0 1.5rem;
+			font-size: 1.5rem;
+		}
+
+		label {
+			display: block;
+			margin-bottom: 0.5rem;
+			font-weight: 600;
+		}
+
+		input[type="password"],
+		input[type="text"] {
+			width: 100%;
+			box-sizing: border-box;
+			padding: 0.7rem 0.8rem;
+			border: 1px solid #aeb9cc;
+			border-radius: 0.4rem;
+			font: inherit;
+		}
+
+		input:focus-visible {
+			outline: 3px solid #9cc4ff;
+			outline-offset: 1px;
+		}
+
+		.toggle {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			margin: 0.8rem 0 1.25rem;
+			font-weight: 400;
+		}
+
+		button {
+			width: 100%;
+			padding: 0.7rem 1rem;
+			border: 0;
+			border-radius: 0.4rem;
+			background: #1769aa;
+			color: #ffffff;
+			font: inherit;
+			font-weight: 700;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background: #12558b;
+		}
+
+		#message {
+			min-height: 1.25rem;
+			margin: 1rem 0 0;
+			color: #1769aa;
+			font-size: 0.9rem;
+		}
+	</style>
+</head>
+<body>
+	<form id="password-form">
+		<h1>Enter your password</h1>
+
+		<label for="password">Password</label>
+		<input id="password" name="password" type="password" autocomplete="current-password" required>
+
+		<label class="toggle" for="show-password">
+			<input id="show-password" type="checkbox">
+			Show password
+		</label>
+
+		<button type="submit">Submit</button>
+		<p id="message" role="status" aria-live="polite"></p>
+	</form>
+
+	<script>
+		const passwordInput = document.querySelector("#password");
+		const showPassword = document.querySelector("#show-password");
+		const passwordForm = document.querySelector("#password-form");
+		const message = document.querySelector("#message");
+
+		showPassword.addEventListener("change", () => {
+			passwordInput.type = showPassword.checked ? "text" : "password";
+		});
+
+		passwordForm.addEventListener("submit", (event) => {
+			event.preventDefault();
+			message.textContent = "Password ready to submit.";
+		});
+	</script>
+</body>
+</html>
